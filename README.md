@@ -44,10 +44,62 @@ Typography utilities in `app/globals.css`:
 
 ```bash
 npm install
+cp .env.example .env.local   # then fill in the values
 npm run dev
 ```
 
-Open `http://localhost:3000`.
+Open `http://localhost:3000` for the public site, or `http://localhost:3000/admin` for the admin console.
+
+## Admin console + Supabase
+
+The site is wired to Supabase for image hosting and CMS-style content. There is
+a password-protected admin at `/admin` for uploading photos.
+
+### 1. Create the Supabase project
+
+In your Supabase dashboard, copy:
+
+- **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+- **anon public** key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- **service_role** key → `SUPABASE_SERVICE_ROLE_KEY` *(server-only — never commit)*
+
+### 2. Run the schema
+
+Open the Supabase SQL editor and run the contents of
+`lib/supabase/schema.sql`. It creates:
+
+- A public storage bucket called `site-images`
+- Tables `site_images`, `team_members`, `gallery_images`
+
+### 3. Set environment variables
+
+Copy `.env.example` to `.env.local` and fill in:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+ADMIN_PASSWORD=pick-a-strong-password
+ADMIN_SESSION_SECRET=long-random-string
+```
+
+### 4. Use the admin
+
+Visit `/admin/login`, enter your `ADMIN_PASSWORD`, and you're in. From there:
+
+- **Site Images** — upload images for fixed slots (hero background, homepage
+  team teaser, About hero, gallery featured cover).
+- **Team** — add/remove team members with photos, names, roles, and section
+  (Core, HODs, Permanent). They render on `/team`.
+- **Gallery** — bulk-upload photos that fill the grid on `/gallery`.
+
+Public pages re-fetch on every request, so changes go live immediately.
+
+### Production deploy (Vercel)
+
+Add the same env vars in Vercel → Project → Settings → Environment Variables.
+The hostname of `NEXT_PUBLIC_SUPABASE_URL` is automatically allow-listed in
+`next.config.mjs` for `next/image`.
 
 ## Deploy to Vercel
 

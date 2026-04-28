@@ -1,12 +1,35 @@
 import Link from "next/link";
 import { ArrowUpRight, ArrowDown } from "lucide-react";
+import { getAllSiteImages } from "@/lib/supabase/queries";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+const teamSlots = [
+  { slot: "home_team_1", role: "Managing Director", note: "Leadership" },
+  { slot: "home_team_2", role: "Team Lead", note: "Operations" },
+  { slot: "home_team_3", role: "Head HR", note: "People" },
+];
+
+export default async function Home() {
+  const images = await getAllSiteImages();
+  const heroBg = images["home_hero_bg"]?.url;
+
   return (
     <>
       {/* HERO */}
-      <section className="min-h-screen flex flex-col justify-end pt-32 pb-16 md:pb-24 relative">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full">
+      <section className="min-h-screen flex flex-col justify-end pt-32 pb-16 md:pb-24 relative overflow-hidden">
+        {heroBg && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={heroBg}
+              alt={images["home_hero_bg"]?.alt || ""}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/60 to-paper/20" />
+          </>
+        )}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 w-full relative">
           <div className="stagger">
             <p className="eyebrow text-crimson mb-8">Deriving Futures · Est. 2023</p>
             <h1 className="headline text-[clamp(3rem,12vw,11rem)] text-ink leading-[0.85] mb-8">
@@ -189,26 +212,33 @@ export default function Home() {
           </p>
 
           <div className="grid md:grid-cols-3 gap-8 mb-12">
-            {[
-              { role: "Managing Director", note: "Leadership" },
-              { role: "Team Lead", note: "Operations" },
-              { role: "Head HR", note: "People" },
-            ].map((p, i) => (
-              <div
-                key={i}
-                className="aspect-[3/4] bg-ink relative overflow-hidden group cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-8">
-                  <p className="eyebrow text-crimson mb-2">{p.note}</p>
-                  <h3 className="headline text-3xl text-paper">{p.role}</h3>
+            {teamSlots.map((p) => {
+              const img = images[p.slot];
+              return (
+                <div
+                  key={p.slot}
+                  className="aspect-[3/4] bg-ink relative overflow-hidden group cursor-pointer"
+                >
+                  {img?.url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={img.url}
+                      alt={img.alt || p.role}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-paper/20 text-sm eyebrow">
+                      Photo placeholder
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/40 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-8">
+                    <p className="eyebrow text-crimson mb-2">{p.note}</p>
+                    <h3 className="headline text-3xl text-paper">{p.role}</h3>
+                  </div>
                 </div>
-                {/* Replace this with real photo when available */}
-                <div className="absolute inset-0 flex items-center justify-center text-paper/20 text-sm">
-                  Photo placeholder
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="text-center">

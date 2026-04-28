@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { getSiteImage } from "@/lib/supabase/queries";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "About — Beyond Belief BPO",
@@ -7,12 +10,25 @@ export const metadata = {
     "We transcend expectations and redefine industry standards with our unwavering commitment to excellence, innovation, and client satisfaction.",
 };
 
-export default function About() {
+export default async function About() {
+  const heroImage = await getSiteImage("about_hero");
+
   return (
     <>
       {/* PAGE HERO */}
-      <section className="pt-40 pb-20 md:pt-48 md:pb-32">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+      <section className="pt-40 pb-20 md:pt-48 md:pb-32 relative overflow-hidden">
+        {heroImage?.url && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={heroImage.url}
+              alt={heroImage.alt || ""}
+              className="absolute inset-0 w-full h-full object-cover opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-paper to-paper/50" />
+          </>
+        )}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 relative">
           <p className="eyebrow text-crimson mb-6">A Little Insight</p>
           <h1 className="headline text-[clamp(3rem,10vw,9rem)] text-ink leading-[0.88]">
             About <span className="headline-italic text-crimson">Us.</span>
