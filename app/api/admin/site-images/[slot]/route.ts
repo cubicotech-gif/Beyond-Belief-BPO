@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseServer, STORAGE_BUCKET } from "@/lib/supabase/server";
+import { revalidateSiteImages } from "@/lib/supabase/revalidate";
 
 export async function PUT(
   req: NextRequest,
@@ -29,6 +30,7 @@ export async function PUT(
   );
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidateSiteImages();
   return NextResponse.json({ ok: true });
 }
 
@@ -54,5 +56,6 @@ export async function DELETE(
     .eq("slot", params.slot);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidateSiteImages();
   return NextResponse.json({ ok: true });
 }

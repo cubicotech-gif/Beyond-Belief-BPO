@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { revalidateGallery } from "@/lib/supabase/revalidate";
 
 export async function POST(req: NextRequest) {
   const body = (await req.json()) as {
@@ -26,5 +27,6 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidateGallery();
   return NextResponse.json({ image: data });
 }

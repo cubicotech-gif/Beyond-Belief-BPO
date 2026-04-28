@@ -20,25 +20,31 @@ export default function SiteImageEditor({ slot, label, description, initialUrl, 
   const [alt, setAlt] = useState(initialAlt);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function persist(nextUrl: string | null, nextPath: string | null, nextAlt: string) {
     setSaving(true);
     setSaved(false);
+    setError(null);
     try {
-      if (!nextUrl) {
-        await fetch(`/api/admin/site-images/${encodeURIComponent(slot)}`, {
-          method: "DELETE",
-        });
-      } else {
-        await fetch(`/api/admin/site-images/${encodeURIComponent(slot)}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: nextUrl, alt: nextAlt, storage_path: nextPath }),
-        });
+      const res = !nextUrl
+        ? await fetch(`/api/admin/site-images/${encodeURIComponent(slot)}`, {
+            method: "DELETE",
+          })
+        : await fetch(`/api/admin/site-images/${encodeURIComponent(slot)}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url: nextUrl, alt: nextAlt, storage_path: nextPath }),
+          });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || `Save failed (${res.status})`);
       }
       setSaved(true);
       router.refresh();
       setTimeout(() => setSaved(false), 1500);
+    } catch (e: any) {
+      setError(e.message || "Save failed");
     } finally {
       setSaving(false);
     }
@@ -74,13 +80,14 @@ export default function SiteImageEditor({ slot, label, description, initialUrl, 
         />
       </label>
 
-      <div className="mt-3 h-5 flex items-center text-xs">
+      <div className="mt-3 min-h-5 flex items-center text-xs">
         {saving && <span className="text-ink/50">Saving…</span>}
-        {saved && (
+        {!saving && saved && (
           <span className="text-crimson inline-flex items-center gap-1">
             <Check size={12} /> Saved
           </span>
         )}
+        {!saving && error && <span className="text-crimson">{error}</span>}
       </div>
     </div>
   );
