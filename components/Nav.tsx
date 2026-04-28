@@ -17,24 +17,44 @@ type NavProps = {
   logoAlt?: string;
 };
 
-function Wordmark({ logoUrl, logoAlt }: NavProps) {
+function Wordmark({
+  logoUrl,
+  logoAlt,
+  scrolled,
+}: {
+  logoUrl: string | null;
+  logoAlt: string;
+  scrolled: boolean;
+}) {
   if (logoUrl) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={logoUrl}
         alt={logoAlt || "Beyond Belief BPO"}
-        className="h-9 md:h-10 w-auto object-contain"
+        className={`w-auto object-contain transition-all duration-500 max-w-[70vw] md:max-w-none ${
+          scrolled ? "h-10 md:h-14" : "h-16 md:h-24 lg:h-28"
+        }`}
       />
     );
   }
   return (
-    <>
-      <span className="headline text-[1.4rem] tracking-tightest leading-none">
+    <div className="flex items-baseline gap-2">
+      <span
+        className={`headline tracking-tightest leading-none transition-all duration-500 ${
+          scrolled ? "text-2xl md:text-3xl" : "text-4xl md:text-6xl lg:text-7xl"
+        }`}
+      >
         Beyond Belief
       </span>
-      <span className="eyebrow text-crimson">BPO</span>
-    </>
+      <span
+        className={`eyebrow text-crimson transition-all duration-500 ${
+          scrolled ? "text-[0.65rem]" : "text-xs md:text-sm"
+        }`}
+      >
+        BPO
+      </span>
+    </div>
   );
 }
 
@@ -53,60 +73,77 @@ export default function Nav({ logoUrl = null, logoAlt = "Beyond Belief BPO" }: N
     <header
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-paper/85 backdrop-blur-xl border-b border-paper-line"
+          ? "bg-paper/90 backdrop-blur-xl border-b border-paper-line"
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-5 flex items-center justify-between">
-        <Link
-          href="/"
-          className={`flex group ${logoUrl ? "items-center" : "items-baseline gap-2"}`}
-          aria-label="Beyond Belief BPO — Home"
-        >
-          <Wordmark logoUrl={logoUrl} logoAlt={logoAlt} />
-        </Link>
+      {/* Logo strip — its own container, free to scale */}
+      <div
+        className={`max-w-[1400px] mx-auto px-6 md:px-10 transition-[padding] duration-500 ${
+          scrolled ? "py-3" : "pt-6 pb-4 md:pt-9 md:pb-5"
+        }`}
+      >
+        <div className="flex items-center justify-between md:justify-center relative">
+          <Link
+            href="/"
+            className="inline-flex items-center"
+            aria-label="Beyond Belief BPO — Home"
+            onClick={() => setOpen(false)}
+          >
+            <Wordmark logoUrl={logoUrl} logoAlt={logoAlt} scrolled={scrolled} />
+          </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="body-text text-sm text-ink/70 hover:text-crimson transition-colors duration-300"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <Link
-          href="/contact"
-          className="hidden md:inline-flex btn-primary !py-2.5 !px-5 !text-xs"
-        >
-          Get in touch
-        </Link>
-
-        <button
-          aria-label="Toggle menu"
-          onClick={() => setOpen(!open)}
-          className="md:hidden flex flex-col gap-1.5 p-2"
-        >
-          <span
-            className={`block h-px w-6 bg-ink transition-transform ${
-              open ? "translate-y-[3px] rotate-45" : ""
-            }`}
-          />
-          <span
-            className={`block h-px w-6 bg-ink transition-transform ${
-              open ? "-translate-y-[3px] -rotate-45" : ""
-            }`}
-          />
-        </button>
+          {/* Mobile-only menu toggle, anchored right of the logo row */}
+          <button
+            aria-label="Toggle menu"
+            onClick={() => setOpen(!open)}
+            className="md:hidden flex flex-col gap-1.5 p-2 absolute right-0 top-1/2 -translate-y-1/2"
+          >
+            <span
+              className={`block h-px w-6 bg-ink transition-transform ${
+                open ? "translate-y-[3px] rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`block h-px w-6 bg-ink transition-transform ${
+                open ? "-translate-y-[3px] -rotate-45" : ""
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Nav strip — slim, desktop only. Sits below the logo, decoupled. */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-500 bg-paper border-b border-paper-line ${
-          open ? "max-h-96" : "max-h-0"
+        className={`hidden md:block transition-colors duration-500 border-t ${
+          scrolled ? "border-paper-line/60" : "border-ink/10"
+        }`}
+      >
+        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-3 flex items-center justify-between">
+          <nav className="flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="body-text text-sm text-ink/70 hover:text-crimson transition-colors duration-300"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+          <Link
+            href="/contact"
+            className="btn-primary !py-2 !px-5 !text-xs"
+          >
+            Get in touch
+          </Link>
+        </div>
+      </div>
+
+      {/* Mobile drawer — links collapsed into a panel */}
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-500 bg-paper border-t border-paper-line ${
+          open ? "max-h-[28rem]" : "max-h-0"
         }`}
       >
         <nav className="px-6 py-6 flex flex-col gap-4">
@@ -120,6 +157,13 @@ export default function Nav({ logoUrl = null, logoAlt = "Beyond Belief BPO" }: N
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/contact"
+            onClick={() => setOpen(false)}
+            className="btn-primary mt-4 self-start"
+          >
+            Get in touch
+          </Link>
         </nav>
       </div>
     </header>

@@ -16,7 +16,7 @@ export default async function About() {
   return (
     <>
       {/* PAGE HERO */}
-      <section className="pt-40 pb-20 md:pt-48 md:pb-32 relative overflow-hidden">
+      <section className="pt-44 pb-20 md:pt-56 md:pb-32 relative overflow-hidden">
         {heroImage?.url && (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
