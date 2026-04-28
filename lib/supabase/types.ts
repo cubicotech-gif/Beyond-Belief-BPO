@@ -35,6 +35,18 @@ export type GalleryImage = {
  */
 export const SITE_IMAGE_SLOTS: { slot: string; label: string; description: string }[] = [
   {
+    slot: "site_logo",
+    label: "Logo — for light backgrounds (Nav)",
+    description:
+      "Primary logo used in the top navigation. Upload a transparent PNG/SVG; dark/colored artwork works best since the Nav sits on white.",
+  },
+  {
+    slot: "site_logo_light",
+    label: "Logo — for dark backgrounds (Footer)",
+    description:
+      "White / inverted version of your logo for the black footer. If left empty, the dark logo from the slot above is used.",
+  },
+  {
     slot: "home_hero_bg",
     label: "Home — Hero background",
     description: "Optional full-bleed background image behind the home hero headline.",

@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
-export default function Footer() {
+type FooterProps = {
+  logoUrl?: string | null;
+  logoAlt?: string;
+};
+
+export default function Footer({ logoUrl = null, logoAlt = "Beyond Belief BPO" }: FooterProps) {
   return (
     <footer className="bg-ink text-paper relative overflow-hidden">
       {/* Massive wordmark */}
@@ -34,10 +39,19 @@ export default function Footer() {
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-1">
-            <div className="flex items-baseline gap-2">
-              <span className="headline text-2xl">Beyond Belief</span>
-              <span className="eyebrow text-crimson">BPO</span>
-            </div>
+            {logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={logoUrl}
+                alt={logoAlt}
+                className="h-10 w-auto object-contain"
+              />
+            ) : (
+              <div className="flex items-baseline gap-2">
+                <span className="headline text-2xl">Beyond Belief</span>
+                <span className="eyebrow text-crimson">BPO</span>
+              </div>
+            )}
             <p className="body-text text-paper/60 mt-4 text-sm max-w-xs">
               Transcending expectations in business process outsourcing since
               our humble beginnings.
