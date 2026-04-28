@@ -5,7 +5,16 @@ import { revalidatePath } from "next/cache";
  * Mutation API routes call this so admin writes appear on the live
  * site without waiting for any cache TTL.
  */
-const PATHS_USING_SITE_IMAGES = ["/", "/about", "/gallery", "/team"];
+// Logo and other site_images are read in the (site) layout, so a logo
+// change should bust every public page that uses that layout.
+const PATHS_USING_SITE_IMAGES = [
+  "/",
+  "/about",
+  "/team",
+  "/careers",
+  "/gallery",
+  "/contact",
+];
 const PATHS_USING_TEAM = ["/", "/team"];
 const PATHS_USING_GALLERY = ["/gallery"];
 

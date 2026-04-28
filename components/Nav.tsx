@@ -12,7 +12,33 @@ const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-export default function Nav() {
+type NavProps = {
+  logoUrl?: string | null;
+  logoAlt?: string;
+};
+
+function Wordmark({ logoUrl, logoAlt }: NavProps) {
+  if (logoUrl) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={logoUrl}
+        alt={logoAlt || "Beyond Belief BPO"}
+        className="h-9 md:h-10 w-auto object-contain"
+      />
+    );
+  }
+  return (
+    <>
+      <span className="headline text-[1.4rem] tracking-tightest leading-none">
+        Beyond Belief
+      </span>
+      <span className="eyebrow text-crimson">BPO</span>
+    </>
+  );
+}
+
+export default function Nav({ logoUrl = null, logoAlt = "Beyond Belief BPO" }: NavProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -32,11 +58,12 @@ export default function Nav() {
       }`}
     >
       <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-5 flex items-center justify-between">
-        <Link href="/" className="flex items-baseline gap-2 group">
-          <span className="headline text-[1.4rem] tracking-tightest leading-none">
-            Beyond Belief
-          </span>
-          <span className="eyebrow text-crimson">BPO</span>
+        <Link
+          href="/"
+          className={`flex group ${logoUrl ? "items-center" : "items-baseline gap-2"}`}
+          aria-label="Beyond Belief BPO — Home"
+        >
+          <Wordmark logoUrl={logoUrl} logoAlt={logoAlt} />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
