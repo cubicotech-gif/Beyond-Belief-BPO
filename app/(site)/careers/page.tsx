@@ -38,7 +38,7 @@ export default function Careers() {
   return (
     <>
       {/* HERO */}
-      <section className="pt-40 pb-20 md:pt-48 md:pb-24">
+      <section className="pt-44 pb-20 md:pt-56 md:pb-24">
         <div className="max-w-[1400px] mx-auto px-6 md:px-10">
           <p className="eyebrow text-crimson mb-6">Careers</p>
           <h1 className="headline text-[clamp(3rem,12vw,10rem)] text-ink leading-[0.88]">
