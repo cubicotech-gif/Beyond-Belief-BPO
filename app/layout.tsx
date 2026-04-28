@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter_Tight } from "next/font/google";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -46,11 +44,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${interTight.variable}`}>
-      <body className="grain min-h-screen">
-        <Nav />
-        <main>{children}</main>
-        <Footer />
-      </body>
+      <body className="grain min-h-screen">{children}</body>
     </html>
   );
 }
