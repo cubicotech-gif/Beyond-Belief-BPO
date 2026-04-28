@@ -30,7 +30,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "File too large (max 8 MB)" }, { status: 413 });
   }
 
-  const supabase = getSupabaseServer();
+  let supabase;
+  try {
+    supabase = getSupabaseServer();
+  } catch (err: any) {
+    return NextResponse.json(
+      { error: err?.message || "Supabase env vars not configured" },
+      { status: 500 }
+    );
+  }
+
   const ext = (file.name.match(/\.[a-zA-Z0-9]+$/)?.[0] || ".bin").toLowerCase();
   const baseName = safeFilename(file.name.replace(/\.[a-zA-Z0-9]+$/, "")) || "image";
   const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${baseName}${ext}`;
@@ -44,6 +53,8 @@ export async function POST(req: NextRequest) {
     });
 
   if (upErr) {
+    // eslint-disable-next-line no-console
+    console.error("[upload] storage upload failed", upErr);
     return NextResponse.json({ error: upErr.message }, { status: 500 });
   }
 

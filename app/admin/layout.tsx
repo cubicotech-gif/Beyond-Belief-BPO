@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import { ADMIN_COOKIE, verifySessionToken } from "@/lib/auth";
-import { LogOut, Image as ImageIcon, Users, Grid3x3, LayoutDashboard } from "lucide-react";
+import {
+  LogOut,
+  Image as ImageIcon,
+  Users,
+  Grid3x3,
+  LayoutDashboard,
+  Activity,
+  AlertTriangle,
+} from "lucide-react";
 
 export const metadata = {
   title: "Admin — Beyond Belief BPO",
@@ -13,17 +21,21 @@ const navItems = [
   { href: "/admin/site-images", label: "Site Images", icon: ImageIcon },
   { href: "/admin/team", label: "Team", icon: Users },
   { href: "/admin/gallery", label: "Gallery", icon: Grid3x3 },
+  { href: "/admin/diagnostics", label: "Diagnostics", icon: Activity },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const authed = await verifySessionToken(cookies().get(ADMIN_COOKIE)?.value);
 
   if (!authed) {
-    // /admin/login renders inside this layout; show a minimal shell.
     return (
       <div className="min-h-screen bg-paper-softer text-ink">{children}</div>
     );
   }
+
+  const envMissing =
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   return (
     <div className="min-h-screen bg-paper-softer text-ink flex">
@@ -70,7 +82,22 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
       </aside>
 
-      <main className="flex-1 min-w-0">{children}</main>
+      <main className="flex-1 min-w-0">
+        {envMissing && (
+          <div className="bg-crimson text-paper px-10 py-4 flex items-center gap-3">
+            <AlertTriangle size={18} className="shrink-0" />
+            <p className="body-text text-sm">
+              Supabase env vars are not set on this deployment. Uploads will
+              fail and images won&apos;t appear on the public site.{" "}
+              <Link href="/admin/diagnostics" className="underline font-medium">
+                Open diagnostics
+              </Link>
+              .
+            </p>
+          </div>
+        )}
+        {children}
+      </main>
     </div>
   );
 }

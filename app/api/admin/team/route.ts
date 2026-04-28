@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { revalidateTeam } from "@/lib/supabase/revalidate";
 import type { TeamSection } from "@/lib/supabase/types";
 
 const validSections: TeamSection[] = ["core", "hods", "permanent"];
@@ -37,5 +38,6 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidateTeam();
   return NextResponse.json({ member: data });
 }

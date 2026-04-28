@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseServer, STORAGE_BUCKET } from "@/lib/supabase/server";
+import { revalidateGallery } from "@/lib/supabase/revalidate";
 
 export async function DELETE(
   _req: NextRequest,
@@ -19,5 +20,6 @@ export async function DELETE(
 
   const { error } = await supabase.from("gallery_images").delete().eq("id", params.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidateGallery();
   return NextResponse.json({ ok: true });
 }
