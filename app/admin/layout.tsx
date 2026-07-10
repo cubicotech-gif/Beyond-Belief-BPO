@@ -57,6 +57,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <Link
                 key={item.href}
                 href={item.href}
+                prefetch={false}
                 className="flex items-center gap-3 px-3 py-2.5 rounded text-paper/70 hover:bg-paper/5 hover:text-paper transition-colors body-text text-sm"
               >
                 <Icon size={16} className="shrink-0" />
@@ -69,6 +70,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div className="px-3 py-4 border-t border-paper/10">
           <Link
             href="/"
+            prefetch={false}
             className="block px-3 py-2 text-paper/50 hover:text-paper text-xs eyebrow"
           >
             ← View live site

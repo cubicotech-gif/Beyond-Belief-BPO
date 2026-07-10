@@ -2,9 +2,9 @@ import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { getAllSiteImages } from "@/lib/supabase/queries";
 
-// The shared logo data is cached with the pages below it; revalidatePath()
+// The shared logo data is baked into the static pages below it; revalidatePath()
 // from the admin logo upload busts the whole tree immediately.
-export const revalidate = 86400;
+export const revalidate = false;
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const images = await getAllSiteImages();

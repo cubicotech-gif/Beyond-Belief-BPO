@@ -1,7 +1,7 @@
 import { getGalleryImages, getSiteImage } from "@/lib/supabase/queries";
 
-// CDN-cached; admin edits bust it on demand via revalidatePath().
-export const revalidate = 86400;
+// Fully static; admin edits bust it on demand via revalidatePath().
+export const revalidate = false;
 
 export const metadata = {
   title: "Gallery — Beyond Belief BPO",

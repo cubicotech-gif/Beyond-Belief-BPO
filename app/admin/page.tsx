@@ -58,6 +58,7 @@ export default async function AdminHome() {
             <Link
               key={c.href}
               href={c.href}
+              prefetch={false}
               className="group bg-paper p-8 hover:bg-ink hover:text-paper transition-colors duration-300"
             >
               <div className="flex items-start justify-between mb-12">
