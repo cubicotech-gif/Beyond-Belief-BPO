@@ -2,7 +2,10 @@ import Link from "next/link";
 import { ArrowUpRight, ArrowDown } from "lucide-react";
 import { getAllSiteImages } from "@/lib/supabase/queries";
 
-export const dynamic = "force-dynamic";
+// Statically cached and served from the CDN. Admin writes call
+// revalidatePath() (see lib/supabase/revalidate.ts), so edits still go live
+// instantly; this TTL is just a background safety net.
+export const revalidate = 86400;
 
 const teamSlots = [
   { slot: "home_team_1", role: "Managing Director", note: "Leadership" },

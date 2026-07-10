@@ -2,7 +2,8 @@ import { ArrowUpRight } from "lucide-react";
 import { getTeamMembers } from "@/lib/supabase/queries";
 import type { TeamMember, TeamSection } from "@/lib/supabase/types";
 
-export const dynamic = "force-dynamic";
+// CDN-cached; admin edits bust it on demand via revalidatePath().
+export const revalidate = 86400;
 
 export const metadata = {
   title: "Team — Beyond Belief BPO",

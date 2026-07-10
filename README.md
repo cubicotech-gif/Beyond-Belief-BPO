@@ -93,7 +93,9 @@ Visit `/admin/login`, enter your `ADMIN_PASSWORD`, and you're in. From there:
   (Core, HODs, Permanent). They render on `/team`.
 - **Gallery** — bulk-upload photos that fill the grid on `/gallery`.
 
-Public pages re-fetch on every request, so changes go live immediately.
+Public pages are statically cached and served from the CDN (Incremental
+Static Regeneration). Admin writes call `revalidatePath()`, so edits go live
+immediately without paying a serverless invocation on every visitor request.
 
 ### Production deploy (Vercel)
 
@@ -128,10 +130,10 @@ Currently using "Photo placeholder" boxes. Drop your recovered images into `/pub
 The 45 real images from the database recovery are documented in your separate `beyondbeliefbpo-images.md` reference. The Z62_xxxx series is the professional photoshoot from November 2023.
 
 ### 2. Contact form backend
-`app/contact/page.tsx` has a working form UI but the submit handler is currently a stub. Wire it to one of:
-- **Supabase**: Insert into a `contact_submissions` table
-- **Resend**: Send email to `info@beyondbeliefbpo.co`
-- **Vercel Form** or **Formspark** for no-backend simplicity
+Wired. The contact form posts to `app/api/contact/route.ts`, which validates
+the input (with a honeypot for bots) and inserts into the `contact_submissions`
+Supabase table. Read and manage messages at `/admin/submissions`. To also get
+an email on each submission, add a Resend call inside that route.
 
 ### 3. Real social media URLs
 Currently `href="#"` in the footer and contact page. Update to actual social URLs.

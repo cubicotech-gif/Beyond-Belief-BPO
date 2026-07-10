@@ -61,11 +61,27 @@ create index if not exists gallery_images_order_idx
   on public.gallery_images (order_index);
 
 -- =============================================================
--- 5. Row Level Security
+-- 5. contact_submissions — messages from the public contact form
+-- =============================================================
+create table if not exists public.contact_submissions (
+  id         uuid primary key default gen_random_uuid(),
+  name       text not null,
+  email      text not null,
+  subject    text not null,
+  message    text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists contact_submissions_created_idx
+  on public.contact_submissions (created_at desc);
+
+-- =============================================================
+-- 6. Row Level Security
 --    Public site reads via service-role on the server, so we can
 --    leave RLS disabled here. If you ever want the anon key to read
 --    directly from the browser, enable RLS and add SELECT policies.
 -- =============================================================
-alter table public.site_images     disable row level security;
-alter table public.team_members    disable row level security;
-alter table public.gallery_images  disable row level security;
+alter table public.site_images         disable row level security;
+alter table public.team_members        disable row level security;
+alter table public.gallery_images      disable row level security;
+alter table public.contact_submissions disable row level security;

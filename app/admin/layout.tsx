@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   Activity,
   AlertTriangle,
+  Mail,
 } from "lucide-react";
 
 export const metadata = {
@@ -21,6 +22,7 @@ const navItems = [
   { href: "/admin/site-images", label: "Site Images", icon: ImageIcon },
   { href: "/admin/team", label: "Team", icon: Users },
   { href: "/admin/gallery", label: "Gallery", icon: Grid3x3 },
+  { href: "/admin/submissions", label: "Messages", icon: Mail },
   { href: "/admin/diagnostics", label: "Diagnostics", icon: Activity },
 ];
 

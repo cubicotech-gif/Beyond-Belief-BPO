@@ -6,14 +6,40 @@ import { ArrowUpRight, MapPin, Phone, Mail } from "lucide-react";
 export default function Contact() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
-    // TODO: wire to Supabase / Resend / your API endpoint
-    await new Promise((r) => setTimeout(r, 800));
-    setSubmitting(false);
-    setSubmitted(true);
+    setError(null);
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const payload = {
+      name: data.get("name"),
+      email: data.get("email"),
+      subject: data.get("subject"),
+      message: data.get("message"),
+      company: data.get("company"), // honeypot
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || "Something went wrong. Please try again.");
+      }
+      form.reset();
+      setSubmitted(true);
+    } catch (err: any) {
+      setError(err?.message || "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -127,6 +153,22 @@ export default function Contact() {
                     textarea
                     required
                   />
+
+                  {/* Honeypot — hidden from real users, catches bots */}
+                  <input
+                    type="text"
+                    name="company"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="hidden"
+                  />
+
+                  {error && (
+                    <p className="body-text text-crimson text-sm" role="alert">
+                      {error}
+                    </p>
+                  )}
 
                   <button
                     type="submit"
