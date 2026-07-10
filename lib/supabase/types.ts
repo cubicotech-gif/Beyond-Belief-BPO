@@ -20,6 +20,15 @@ export type TeamMember = {
   created_at: string;
 };
 
+export type ContactSubmission = {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  created_at: string;
+};
+
 export type GalleryImage = {
   id: string;
   url: string;

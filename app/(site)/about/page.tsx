@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { getSiteImage } from "@/lib/supabase/queries";
 
-export const dynamic = "force-dynamic";
+// Fully static; admin edits bust it on demand via revalidatePath().
+export const revalidate = false;
 
 export const metadata = {
   title: "About — Beyond Belief BPO",

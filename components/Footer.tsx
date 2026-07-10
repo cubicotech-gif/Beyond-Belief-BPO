@@ -21,6 +21,7 @@ export default function Footer({ logoUrl = null, logoAlt = "Beyond Belief BPO" }
           <div className="mt-12 flex flex-wrap items-center gap-4">
             <Link
               href="/contact"
+              prefetch={false}
               className="inline-flex items-center gap-2 px-7 py-4 bg-paper text-ink rounded-full text-sm font-medium hover:bg-crimson hover:text-paper transition-colors duration-300"
             >
               Start a conversation <ArrowUpRight size={16} />
@@ -100,6 +101,7 @@ export default function Footer({ logoUrl = null, logoAlt = "Beyond Belief BPO" }
                 <li key={href}>
                   <Link
                     href={href}
+                    prefetch={false}
                     className="body-text text-paper/70 text-sm hover:text-crimson transition-colors"
                   >
                     {label}

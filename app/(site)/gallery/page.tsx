@@ -1,6 +1,7 @@
 import { getGalleryImages, getSiteImage } from "@/lib/supabase/queries";
 
-export const dynamic = "force-dynamic";
+// Fully static; admin edits bust it on demand via revalidatePath().
+export const revalidate = false;
 
 export const metadata = {
   title: "Gallery — Beyond Belief BPO",

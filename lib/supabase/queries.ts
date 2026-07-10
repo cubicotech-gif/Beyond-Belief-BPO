@@ -1,6 +1,12 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { getSupabaseServer } from "./server";
-import type { GalleryImage, SiteImage, TeamMember, TeamSection } from "./types";
+import type {
+  ContactSubmission,
+  GalleryImage,
+  SiteImage,
+  TeamMember,
+  TeamSection,
+} from "./types";
 
 /**
  * Throwing during a server-render in Next would 500 the whole page.
@@ -14,7 +20,6 @@ function logQueryFailure(where: string, err: unknown) {
 }
 
 export async function getAllSiteImages(): Promise<Record<string, SiteImage>> {
-  noStore();
   try {
     const supabase = getSupabaseServer();
     const { data, error } = await supabase.from("site_images").select("*");
@@ -29,7 +34,6 @@ export async function getAllSiteImages(): Promise<Record<string, SiteImage>> {
 }
 
 export async function getSiteImage(slot: string): Promise<SiteImage | null> {
-  noStore();
   try {
     const supabase = getSupabaseServer();
     const { data, error } = await supabase
@@ -46,7 +50,6 @@ export async function getSiteImage(slot: string): Promise<SiteImage | null> {
 }
 
 export async function getTeamMembers(): Promise<Record<TeamSection, TeamMember[]>> {
-  noStore();
   const grouped: Record<TeamSection, TeamMember[]> = {
     core: [],
     hods: [],
@@ -70,7 +73,6 @@ export async function getTeamMembers(): Promise<Record<TeamSection, TeamMember[]
 }
 
 export async function getGalleryImages(): Promise<GalleryImage[]> {
-  noStore();
   try {
     const supabase = getSupabaseServer();
     const { data, error } = await supabase
@@ -82,6 +84,26 @@ export async function getGalleryImages(): Promise<GalleryImage[]> {
     return (data ?? []) as GalleryImage[];
   } catch (err) {
     logQueryFailure("getGalleryImages", err);
+    return [];
+  }
+}
+
+/**
+ * Admin-only: contact form submissions, newest first. Uses noStore so the
+ * admin inbox always reflects the latest messages.
+ */
+export async function getContactSubmissions(): Promise<ContactSubmission[]> {
+  noStore();
+  try {
+    const supabase = getSupabaseServer();
+    const { data, error } = await supabase
+      .from("contact_submissions")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as ContactSubmission[];
+  } catch (err) {
+    logQueryFailure("getContactSubmissions", err);
     return [];
   }
 }

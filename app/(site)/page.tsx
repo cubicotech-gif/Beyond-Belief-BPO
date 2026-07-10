@@ -2,7 +2,11 @@ import Link from "next/link";
 import { ArrowUpRight, ArrowDown } from "lucide-react";
 import { getAllSiteImages } from "@/lib/supabase/queries";
 
-export const dynamic = "force-dynamic";
+// Fully static, served from the CDN — no time-based regeneration at all.
+// Admin writes call revalidatePath() (see lib/supabase/revalidate.ts), so
+// edits still go live instantly. This is the most frugal setting for the
+// Vercel free tier: a visit costs a cached edge response, nothing more.
+export const revalidate = false;
 
 const teamSlots = [
   { slot: "home_team_1", role: "Managing Director", note: "Leadership" },

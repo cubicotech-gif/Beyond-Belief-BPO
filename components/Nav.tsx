@@ -125,6 +125,7 @@ export default function Nav({ logoUrl = null, logoAlt = "Beyond Belief BPO" }: N
               <Link
                 key={link.href}
                 href={link.href}
+                prefetch={false}
                 className="body-text text-sm text-ink/70 hover:text-crimson transition-colors duration-300"
               >
                 {link.label}
@@ -133,6 +134,7 @@ export default function Nav({ logoUrl = null, logoAlt = "Beyond Belief BPO" }: N
           </nav>
           <Link
             href="/contact"
+            prefetch={false}
             className="btn-primary !py-2 !px-5 !text-xs"
           >
             Get in touch
@@ -151,6 +153,7 @@ export default function Nav({ logoUrl = null, logoAlt = "Beyond Belief BPO" }: N
             <Link
               key={link.href}
               href={link.href}
+              prefetch={false}
               onClick={() => setOpen(false)}
               className="headline text-2xl text-ink hover:text-crimson transition-colors"
             >
@@ -159,6 +162,7 @@ export default function Nav({ logoUrl = null, logoAlt = "Beyond Belief BPO" }: N
           ))}
           <Link
             href="/contact"
+            prefetch={false}
             onClick={() => setOpen(false)}
             className="btn-primary mt-4 self-start"
           >
